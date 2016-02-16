@@ -63,10 +63,6 @@ pidee_feature *dipsFeaturesPtrs[ 8 ] = { &pidee_feature_dip_1,
 // =====
 
 void Pidee::setup() {
-
-    // Setup WiringPi and all features
-    wiringPiSetupSys();
-
     pidee_feature_setup( &pidee_feature_dip_1 );
     pidee_feature_setup( &pidee_feature_dip_2 );
     pidee_feature_setup( &pidee_feature_dip_3 );
@@ -80,6 +76,7 @@ void Pidee::setup() {
     pidee_feature_setup( &pidee_feature_led_green );
     pidee_feature_setup( &pidee_feature_led_yellow );
 
+    wiringPiSetupSys();
 };
 
 // Button
