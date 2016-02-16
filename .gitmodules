@@ -1,0 +1,3 @@
+[submodule "libs/libpidee"]
+	path = libs/libpidee
+	url = https://github.com/Pidee/libpidee.git
