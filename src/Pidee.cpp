@@ -3,13 +3,15 @@
 #include "wiringPi.h"
 #include <pthread.h>
 #include <stdexcept>
+#include <vector>
+#include <iostream>
 
 // Flags, State & Utils
 // ====================
 #ifdef PIDEE_EVENTS
-vector<std::function<void(void)> buttonSubscriberFns;
-vector<std::function<void(string)> dipSubscriberFns;
-vector<pidee_feature> eventLog;
+std::vector<std::function<void(void)>> buttonSubscriberFns;
+std::vector<std::function<void(std::string)>> dipSubscriberFns;
+std::vector<pidee_feature> eventLog;
 
 pthread_mutex_t interupt_lock;
 
@@ -22,7 +24,7 @@ void interupt_handler ( pidee_feature feature ) {
 }
 
 void initInterupts () {
-    if ( pthread_mutex_init( &my_interupt_lock, NULL ) != 0 ) {
+    if ( pthread_mutex_init( &interupt_lock, NULL ) != 0 ) {
         printf( "\n Pidee mutex init failed\n" );
         exit( EXIT_FAILURE );
     }
@@ -54,7 +56,8 @@ pidee_feature *dipsFeaturesPtrs[ 8 ] = { &pidee_feature_dip_1,
                                          &pidee_feature_dip_4, 
                                          &pidee_feature_dip_5, 
                                          &pidee_feature_dip_6, 
-                                         &pidee_feature_dip_7 };
+                                         &pidee_feature_dip_7, 
+                                         &pidee_feature_dip_8 };
 
 // Setup
 // =====
@@ -110,9 +113,9 @@ int Pidee::getDip() {
     return value;
 }
 
-void Pidee::getDip( int index ) {
+bool Pidee::getDip( int index ) {
     if ( index < 0 || index > 7 ) {
-        cout << "Error:: index out of bounds for Pidee::getDip" << endl;
+        std::cout << "Error:: index out of bounds for Pidee::getDip" << std::endl;
         throw std::invalid_argument( "index out of bounds for Pidee::getDip" );
     }
     return pidee_feature_read( dipsFeaturesPtrs[ index ] );
@@ -140,12 +143,12 @@ void Pidee::setLedGreen( bool isOn ) {
 // Notifications
 // =============
 void Pidee::notify() {
-    vector<pidee_feature> lastestEventLog;
+    std::vector<pidee_feature> lastestEventLog;
     pthread_mutex_lock( &interupt_lock );
     lastestEventLog = eventLog;
     eventLog.clear();
     pthread_mutex_unlock( &interupt_lock );
-    
+
     // Trigger subscribers
     for ( auto feature : lastestEventLog ) {
         if ( feature.feature_type == PIDEE_FEATURE_BUTTON ) {
@@ -162,19 +165,25 @@ void Pidee::notify() {
 }
 
 void Pidee::onButton( std::function<void(void)> func ) {
+    if ( !interuptsInitalised ) {
+        initInterupts();
+    }
     buttonSubscriberFns.push_back( func );
 }
 
 void Pidee::offButton( std::function<void(void)> func ) {
-    cout << "TO DO:: offButton " << endl;
+    std::cout << "TO DO:: offButton " << std::endl;
 }
 
-void Pidee::onDip( std::function<void(string)> func ) {
+void Pidee::onDip( std::function<void(std::string)> func ) {
+    if ( !interuptsInitalised ) {
+        initInterupts();
+    }
     dipSubscriberFns.push_back( func );
 }
 
-void Pidee::offDip( std::function<void(string)> func ) {
-    cout << "TO DO:: offDip " << endl;
+void Pidee::offDip( std::function<void(std::string)> func ) {
+    std::cout << "TO DO:: offDip " << std::endl;
 }
 
 #endif

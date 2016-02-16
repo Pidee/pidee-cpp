@@ -38,8 +38,8 @@ namespace Pidee {
     void notify();
     void onButton( std::function<void(void)> func );
     void offButton( std::function<void(void)> func );
-    void onDip( std::function<void(string)> func );
-    void offDip( std::function<void(string)> func );
+    void onDip( std::function<void(std::string)> func );
+    void offDip( std::function<void(std::string)> func );
     #endif
 
 };
