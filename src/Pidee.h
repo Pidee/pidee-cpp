@@ -9,8 +9,6 @@
 #include <functional>
 #endif
 
-#define PIDEE_CPP_VERSION "0.1.0"
-
 namespace Pidee {
     // Setup
     // =====
