@@ -6,15 +6,15 @@ int main() {
 
     Pidee::setup();
 
-    printf( "|-----|-------|\n" );
-    printf( "| DIP | Value |\n" );
-    printf( "|-----|-------|\n" );
+    printf( "┌────────┬─────────┐\n" );
+    printf( "│ Switch │  Value  │\n" );
+    printf( "├────────┼─────────┤\n" );
 
     for ( int i = 0; i <8 ; i++ ) {
-    	printf( "|  %d  |   %d   | \n", i+1, Pidee::getDip( i ) );
+    	printf( "│    %d   │    %d    │\n", i+1, Pidee::getDip( i ) );
     }
     
-    printf( "|-----|-------|\n" );
+    printf( "└────────┴─────────┘\n" );
 
     return 0;
 }
